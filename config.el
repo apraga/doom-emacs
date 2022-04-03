@@ -6,8 +6,8 @@
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
-(setq user-full-name "John Doe"
-      user-mail-address "john@doe.com")
+(setq user-full-name "Alexis Praga"
+      user-mail-address "alexis.praga@free.fr")
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
@@ -62,5 +62,9 @@
   ;; Common variables for org-agenda
   ;; Important : agenda view does not show notes with imcomplete parents in Doom
   (setq org-agenda-start-day "today"
-        org-refile-allow-creating-parent-nodes 'confirm)
+        org-refile-allow-creating-parent-nodes 'confirm))
+
+  ;; Bibliography with citar (vertico is the default completion engine)
+(after! citar
+  (setq! citar-bibliography '("~/org/recherche/wdr45/biblio.bib"))
   )
