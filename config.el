@@ -34,6 +34,7 @@
         org-refile-allow-creating-parent-nodes 'confirm)
   ;; Simpler templates. WARNING: property in templates makes doom crash
   ;; as it uses org-crypt. For now, org-crypt must be disabled in packages.el
+  ;; See https://github.com/hlissner/doom-emacs/issues/6250
   (setq
         org-capture-templates
         '(("t" "Personal todo" entry
