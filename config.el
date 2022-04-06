@@ -6,8 +6,8 @@
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
-(setq user-full-name "John Doe"
-      user-mail-address "john@doe.com")
+(setq user-full-name "Alexis Praga"
+      user-mail-address "alexis.praga@free.fr")
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
@@ -39,6 +39,9 @@
         org-capture-templates
         '(("t" "Personal todo" entry
            (file+headline "~/org/todo.org" "Inbox")
-           "* TODO %?\n%^{test}p" :prepend t :kill-buffer t)))
+           "* TODO %?\n%^{test}p" :prepend t :kill-buffer t))))
 
+  ;; Bibliography with citar (vertico is the default completion engine)
+(after! citar
+  (setq! citar-bibliography '("~/org/recherche/wdr45/biblio.bib"))
   )
