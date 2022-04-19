@@ -28,7 +28,7 @@
 ;; Rest of the org config goes there
 (after! org
   ;; My agenda files
-  (setq org-agenda-files (list "todo.org"))
+  (setq org-agenda-files (list "todo.org" "recherche.org"))
   ;; Important : agenda view does not show notes with imcomplete parents in Doom
   (setq org-agenda-start-day "today"
         org-refile-allow-creating-parent-nodes 'confirm)
@@ -39,7 +39,7 @@
         org-capture-templates
         '(("t" "Personal todo" entry
            (file+headline "~/org/todo.org" "Inbox")
-           "* TODO %?\n%^{test}p")
+           "* TODO %?")
           ("s" "Sport")
           ("sr" "Running" entry
            (file "~/org/workout.org")
@@ -57,4 +57,9 @@
   ;; Bibliography with citar (vertico is the default completion engine)
 (after! citar
   (setq! citar-bibliography '("~/org/recherche/wdr45/biblio.bib"))
+  )
+
+(defun doi2bib()
+  (interactive)
+  (shell-command (concat "doi2bib " (read-string "doi ?")" >> biblio.bib"))
   )
