@@ -27,11 +27,10 @@
 
 ;; Rest of the org config goes there
 (after! org
-  ;; My agenda files
-  (setq org-agenda-files (list "todo.org"))
-  ;; Important : agenda view does not show notes with imcomplete parents in Doom
-  (setq org-agenda-start-day "today"
-        org-refile-allow-creating-parent-nodes 'confirm)
+  (setq org-agenda-files (list "todo.org") ;; My agenda files
+        org-agenda-start-day "today" ; Important : agenda view does not show notes with imcomplete parents in Doom
+        org-refile-allow-creating-parent-nodes 'confirm ; Create new nodes when refiling
+        org-log-done 'time) ; Save date when done
   ;; Simpler templates. WARNING: property in templates makes doom crash
   ;; as it uses org-crypt. For now, org-crypt must be disabled in packages.el
   ;; See https://github.com/hlissner/doom-emacs/issues/6250
@@ -39,7 +38,7 @@
         org-capture-templates
         '(("t" "Personal todo" entry
            (file+headline "~/org/todo.org" "Inbox")
-           "* TODO %?\n%^{test}p")
+           "* TODO %?")
           ("s" "Sport")
           ("sr" "Running" entry
            (file "~/org/workout.org")
@@ -56,5 +55,16 @@
 
   ;; Bibliography with citar (vertico is the default completion engine)
 (after! citar
-  (setq! citar-bibliography '("~/org/recherche/wdr45/biblio.bib"))
-  )
+  (setq! citar-bibliography '("~/org/recherche/wdr45/memoire.bib")
+         citar-library-paths '("~/org/recherche/wdr45/papers/")
+         citar-notes-paths '("~/org/recherche/wdr45/notes/")))
+
+(with-eval-after-load 'ox-latex
+  (add-to-list 'org-latex-classes
+               '("memoir"
+                 "\\documentclass{memoir}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
