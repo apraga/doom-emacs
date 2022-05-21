@@ -1,0 +1,69 @@
+* General config
+Note : edit a block wit C-c '
+#+begin_src emacs-lisp
+(setq user-full-name "Alexis Praga"
+    user-mail-address "alexis.praga@free.fr"
+    doom-theme 'doom-one)
+#+end_src
+
+* Editor setup
+#+begin_src emacs-lisp
+(setq display-line-numbers-type 'relative)
+#+end_src
+
+* Org config
+** General
+TODO: org-template does not work with <e TAB but only with C-c ,
+
+#+begin_src emacs-lisp
+(setq org-directory "~/org/" ; Must be set before org loads
+#+end_src
+Other general config come later:
+#+begin_src emacs-lisp
+(after! org
+  (setq org-agenda-files (list "todo.org" "recherche.org") ; My agenda files
+        org-agenda-start-day "today" ; Agenda view does not show notes with imcomplete parents in Doom !
+        org-refile-allow-creating-parent-nodes 'confirm))
+#+end_src
+
+** Capture
+Simpler templates. WARNING: property in templates makes doom crash
+as it uses org-crypt. For now, org-crypt must be disabled in packages.el
+See https://github.com/hlissner/doom-emacs/issues/6250
+#+begin_src emacs-lisp
+(after! org
+  (setq org-capture-templates
+        '(("t" "Personal todo" entry (file+headline "todo.org" "Inbox") "* TODO %?")
+          ("s" "Sport")
+          ("sr" "Running" entry (file "workout.org") "* %t Running\n%?" )
+          ("st" "Tricking" entry (file "workout.org") "* %t Tricking\n%?")
+          ("sw" "Workout" entry (file "workout.org") "* %t Workout\n%?
+- RTO: %^{RTO}
+L-sit: %^{L-sit}
+Skin-the-cat (avec descente): %^{Skin-the-cat}
+- Muscle-up %^{Muscle-up}
+Extension: %^{Extension}
+- FL tucked row : %^{FL tucked row}
+Pistols : %^{Pistols}
+- Planche tucked push-up: %^{Planche}
+Compression: %^{Compression}"))))
+#+end_src
+** Latex
+#+begin_src emacs-lisp
+(after! org
+  ;; On freeb   sd latexmk is not found..
+ (setq org-latex-pdf-process '("latexmk -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))
+ ;; Export to latex with the scrreport class from komascript)
+  (with-eval-after-load "ox-latex"
+    (add-to-list 'org-latex-classes
+               '("scrreprt" "\\documentclass{scrreprt}"
+                 ("\\chapter{%s}" . "\\chapter*{%s}")
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}"))))
+
+  )
+;; Bibliography with citar (vertico is the default completion engine)
+(after! citar
+  (setq! citar-bibliography '("~/org/recherche/wdr45/memoire.bib"))
+  )
+#+end_src
