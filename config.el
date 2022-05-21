@@ -13,7 +13,9 @@
 (after! org
   (setq org-agenda-files (list "todo.org" "recherche.org") ; My agenda files
         org-agenda-start-day "today" ; Agenda view does not show notes with imcomplete parents in Doom !
-        org-refile-allow-creating-parent-nodes 'confirm)
+        org-refile-allow-creating-parent-nodes 'confirm
+        ;; On freebsd latexmk is not found..
+        org-latex-pdf-process '("latexmk -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))
   ;; Simpler templates. WARNING: property in templates makes doom crash
   ;; as it uses org-crypt. For now, org-crypt must be disabled in packages.el
   ;; See https://github.com/hlissner/doom-emacs/issues/6250
