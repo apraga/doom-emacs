@@ -24,8 +24,14 @@
           ("st" "Tricking" entry (file "workout.org") "* %t Tricking\n%?")
           ("sw" "Workout" entry (file "workout.org") "* %t Workout\n%?")
           ))
-  )
+  (with-eval-after-load "ox-latex"
+    (add-to-list 'org-latex-classes
+               '("scrreprt" "\\documentclass{scrreprt}"
+                 ("\\chapter{%s}" . "\\chapter*{%s}")
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}"))))
 
+  )
 ;; Bibliography with citar (vertico is the default completion engine)
 (after! citar
   (setq! citar-bibliography '("~/org/recherche/wdr45/memoire.bib"))
