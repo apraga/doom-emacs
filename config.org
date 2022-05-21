@@ -16,7 +16,7 @@ Note : edit a block wit C-c '
 TODO: org-template does not work with <e TAB but only with C-c ,
 
 #+begin_src emacs-lisp
-(setq org-directory "~/org/" ; Must be set before org loads
+(setq org-directory "~/org/") ; Must be set before org loads
 #+end_src
 Other general config come later:
 #+begin_src emacs-lisp
