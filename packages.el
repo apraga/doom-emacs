@@ -7,3 +7,4 @@
 
 (package! org-crypt :disable t)
 (package! keychain-environment)
+(package! biblio) ; Add a paper by its DOI to bibtex
