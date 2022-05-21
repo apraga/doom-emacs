@@ -56,7 +56,7 @@
 
   ;; Bibliography with citar (vertico is the default completion engine)
 (after! citar
-  (setq! citar-bibliography '("~/org/recherche/wdr45/biblio.bib"))
+  (setq! citar-bibliography '("~/org/recherche/wdr45/memoire.bib"))
   )
 
 (defun doi2bib()
