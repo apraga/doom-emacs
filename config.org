@@ -67,3 +67,15 @@ Compression: %^{Compression}"))))
   (setq! citar-bibliography '("~/org/recherche/wdr45/memoire.bib"))
   )
 #+end_src
+* Dired
+Hide information by default
+#+begin_src emacs-lisp
+(use-package! dired
+  :hook (dired-mode . dired-hide-details-mode))
+#+end_src
+* Mail
+Jump to inbox directly
+#+begin_src emacs-lisp
+(after! notmuch
+  (setq +notmuch-home-function (lambda () (notmuch-search "tag:inbox"))))
+#+end_src
