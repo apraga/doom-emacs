@@ -49,16 +49,19 @@ Pistols : %^{Pistols}
 Compression: %^{Compression}"))))
 #+end_src
 ** Latex
+- Compilation: on freebsd latexmk is not found, so we force it
+- Add a komascript class to export
+- Manage bibliography with citar
+For unnumbered section, we use the \addchap command to have an entry in TOC
 #+begin_src emacs-lisp
 (after! org
-  ;; On freeb   sd latexmk is not found..
  (setq org-latex-pdf-process '("latexmk -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))
  ;; Export to latex with the scrreport class from komascript)
   (with-eval-after-load "ox-latex"
     (add-to-list 'org-latex-classes
                '("scrreprt" "\\documentclass{scrreprt}"
-                 ("\\chapter{%s}" . "\\chapter*{%s}")
-                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\chapter{%s}" . "\\addchap{%s}")
+                 ("\\section{%s}" . "\\addsec*{%s}")
                  ("\\subsection{%s}" . "\\subsection*{%s}"))))
 
   )
@@ -66,6 +69,16 @@ Compression: %^{Compression}"))))
 (after! citar
   (setq! citar-bibliography '("~/org/recherche/wdr45/memoire.bib"))
   )
+#+end_src
+Shortcut to export to pdf via latex asynchronously (SPC m é)
+#+begin_src emacs-lisp
+(defun +org/latex-to-pdf()
+  (interactive)
+  (org-latex-export-to-pdf 1))
+
+(map! :map org-mode-map
+        :localleader
+        "é"      #'+org/latex-to-pdf)
 #+end_src
 * Dired
 Hide information by default
