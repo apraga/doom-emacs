@@ -3,9 +3,14 @@ Note : edit a block wit C-c '
 #+begin_src emacs-lisp
 (setq user-full-name "Alexis Praga"
     user-mail-address "alexis.praga@free.fr"
-    doom-theme 'doom-one)
+    doom-theme 'doom-dark+)
 #+end_src
-
+* Hack
+For WSL2, the bepo layout inputs "gé" as weird characters. Unsetting seems to do the trick.
+Issue opened https://github.com/doomemacs/doomemacs/issues/6521
+#+begin_src emacs-lisp
+(setq evil-escape-key-sequence nil)
+#+end_src
 * Editor setup
 #+begin_src emacs-lisp
 (setq display-line-numbers-type 'relative)
@@ -56,7 +61,7 @@ For unnumbered section, we use the \addchap command to have an entry in TOC
 #+begin_src emacs-lisp
 (after! org
  (setq org-latex-pdf-process '("latexmk -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))
- ;; Export to latex with the scrreport class from komascript)
+ (eval-after-load 'ox '(require 'ox-koma-letter)) ;; Export to latex with the scrreport class from komascript)
   (with-eval-after-load "ox-latex"
     (add-to-list 'org-latex-classes
                '("scrreprt" "\\documentclass{scrreprt}"
@@ -67,14 +72,19 @@ For unnumbered section, we use the \addchap command to have an entry in TOC
   )
 ;; Bibliography with citar (vertico is the default completion engine)
 (after! citar
-  (setq! citar-bibliography '("~/org/recherche/wdr45/memoire.bib"))
+  (setq! citar-bibliography '("~/org/recherche/wdr45/memoire.bib")
+         citar-notes-paths '("~/org/recherche/wdr45/notes/")
+         )
   )
 #+end_src
 Shortcut to export to pdf via latex asynchronously (SPC m é)
 #+begin_src emacs-lisp
 (defun +org/latex-to-pdf()
   (interactive)
-  (org-latex-export-to-pdf 1))
+  (org-latex-export-to-pdf)
+  (let* ((f (buffer-file-name))
+        (f2 (concat (file-name-sans-extension f) ".pdf")))
+    (copy-file f2 "/mnt/c/Users/alexi/" "yes")))
 
 (map! :map org-mode-map
         :localleader
@@ -91,4 +101,30 @@ Jump to inbox directly
 #+begin_src emacs-lisp
 (after! notmuch
   (setq +notmuch-home-function (lambda () (notmuch-search "tag:inbox"))))
+#+end_src
+#+begin_src emacs-lisp
+(defun get-bibtex-from-doi (doi)
+ "Get a BibTeX entry from the DOI"
+ (interactive "MDOI: ")
+ (let ((url-mime-accept-string "text/bibliography;style=bibtex"))
+   (with-current-buffer
+     (url-retrieve-synchronously
+       (format "http://dx.doi.org/%s"
+       	(replace-regexp-in-string "http://dx.doi.org/" "" doi)))
+     (switch-to-buffer (current-buffer))
+     (goto-char (point-max))
+     (setq bibtex-entry
+     	  (buffer-substring
+          	(string-match "@" (buffer-string))
+              (point)))
+     (kill-buffer (current-buffer))))
+ (insert (decode-coding-string bibtex-entry 'utf-8))
+ (bibtex-fill-entry))
+#+end_src
+
+* Hledger
+
+#+begin_src emacs-lisp
+ (after! ledger
+   (setq ledger-binary-path "hledger"))
 #+end_src
