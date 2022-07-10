@@ -90,23 +90,6 @@ Shortcut to export to pdf via latex asynchronously (SPC m é)
         :localleader
         "é"      #'+org/latex-to-pdf)
 #+end_src
-** Publishing
-#+begin_src emacs-lisp
-(after! org
-  (setq org-publish-project-alist
-        '(("genetique-notes"
-           :recursive nil
-           :base-directory "~/org/genetique"
-           :publishing-directory "~/org/genetique/html"
-           :publishing-function org-html-publish-to-html)
-          ("genetique-img"
-           :base-directory "~/org/genetique/img"
-           :base-extension "png\\|jpg"
-           :publishing-directory "~/org/genetique/html/img"
-           :publishing-function org-publish-attachment)
-          ("genetique" :components ("genetique-notes" "genetique-img"))))
-)
-#+end_src
 * Dired
 Hide information by default
 #+begin_src emacs-lisp
