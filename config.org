@@ -23,10 +23,11 @@ TODO: org-template does not work with <e TAB but only with C-c ,
 #+begin_src emacs-lisp
 (setq org-directory "~/org/") ; Must be set before org loads
 #+end_src
-Other general config come later:
+Other general config come later. Implementing GTD, following https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html
 #+begin_src emacs-lisp
 (after! org
-  (setq org-agenda-files (list "todo.org" "recherche.org") ; My agenda files
+  (setq org-agenda-files (list "inbox.org" "gtd.org") ; My agenda files
+        org-refile-targets (list "gtd.org" "someday.org")
         org-agenda-start-day "today" ; Agenda view does not show notes with imcomplete parents in Doom !
         org-refile-allow-creating-parent-nodes 'confirm))
 #+end_src
