@@ -2,8 +2,8 @@
 Note : edit a block wit C-c '
 #+begin_src emacs-lisp
 (setq user-full-name "Alexis Praga"
-    user-mail-address "alexis.praga@free.fr"
-    doom-theme 'doom-dark+)
+      user-mail-address "alexis.praga@free.fr"
+      doom-theme 'wombat)
 #+end_src
 * Hack
 For WSL2, the bepo layout inputs "gé" as weird characters. Unsetting seems to do the trick.
@@ -23,37 +23,72 @@ TODO: org-template does not work with <e TAB but only with C-c ,
 #+begin_src emacs-lisp
 (setq org-directory "~/org/") ; Must be set before org loads
 #+end_src
-Other general config come later. Implementing GTD, following https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html
+Other general config come later.
+** Implementing GTD
+Following https://www.labri.fr/perso/nrougier/GTD/index.html.
+Projects are defined with Notes and Task subcategories
 #+begin_src emacs-lisp
 (after! org
-  (setq org-agenda-files (list "inbox.org" "gtd.org") ; My agenda files
-        org-refile-targets (list "gtd.org" "someday.org")
+  (setq org-agenda-files (list "inbox.org" "projects.org") ; My agenda files
+        org-refile-targets (concat org-directory "projects.org")
         org-agenda-start-day "today" ; Agenda view does not show notes with imcomplete parents in Doom !
         org-refile-allow-creating-parent-nodes 'confirm))
 #+end_src
-
-** Capture
-Simpler templates. WARNING: property in templates makes doom crash
-as it uses org-crypt. For now, org-crypt must be disabled in packages.el
-See https://github.com/hlissner/doom-emacs/issues/6250
+Configure agenda and TODO
+#+begin_src emacs-lisp
+(after! org
+  (setq org-agenda-hide-tags-regexp "." ; hide any tag (.) in the agenda
+        org-agenda-prefix-format  ; no category for TODO items
+        '((agenda . " %i %-12:c%?-12t% s")
+          (todo   . " ")
+          (tags   . " %i %-12:c")
+          (search . " %i %-12:c"))))
+#+end_src
+Agenda is split into several sections
+#+begin_src emacs-lisp
+(after! org
+  (setq org-agenda-custom-commands
+        '(("g" "Get Things Done (GTD)"
+           ((agenda ""
+                    ((org-agenda-skip-function
+                      '(org-agenda-skip-entry-if 'deadline))
+                     (org-deadline-warning-days 0)))
+            (agenda nil
+                    ((org-agenda-entry-types '(:deadline))
+                     (org-agenda-format-date "")
+                     (org-deadline-warning-days 7)
+                     (org-agenda-skip-function
+                      '(org-agenda-skip-entry-if 'notregexp "\\* NEXT"))
+                     (org-agenda-overriding-header "\nDeadlines")))
+            (tags-todo "inbox"
+                       ((org-agenda-prefix-format "  %?-12t% s")
+                        (org-agenda-overriding-header "\nInbox\n")))
+            (tags "CLOSED>=\"<today>\""
+                  ((org-agenda-overriding-header "\nCompleted today\n"))))))))
+#+end_src
+Define capture for inbox tasks. As well as sports
 #+begin_src emacs-lisp
 (after! org
   (setq org-capture-templates
-        '(("t" "Personal todo" entry (file+headline "todo.org" "Inbox") "* TODO %?")
+        `(("i" "Inbox" entry  (file "inbox.org")
+           ,(concat "* TODO %?\n"
+                    "/Entered on/ %U"))
           ("s" "Sport")
           ("sr" "Running" entry (file "workout.org") "* %t Running\n%?" )
           ("st" "Tricking" entry (file "workout.org") "* %t Tricking\n%?")
-          ("sw" "Workout" entry (file "workout.org") "* %t Workout\n%?
-- RTO: %^{RTO}
-L-sit: %^{L-sit}
-Skin-the-cat (avec descente): %^{Skin-the-cat}
-- Muscle-up %^{Muscle-up}
-Extension: %^{Extension}
-- FL tucked row : %^{FL tucked row}
-Pistols : %^{Pistols}
-- Planche tucked push-up: %^{Planche}
-Compression: %^{Compression}"))))
+          ("sw" "Workout" entry (file "workout.org")
+           ,(concat "* %t Workout\n%?"
+                    "- RTO: %^{RTO}"
+                    "L-sit: %^{L-sit}"
+                    "Skin-the-cat (avec descente): %^{Skin-the-cat}"
+                    "- Muscle-up %^{Muscle-up}"
+                    "Extension: %^{Extension}"
+                    "- FL tucked row : %^{FL tucked row}"
+                    "Pistols : %^{Pistols}"
+                    "- Planche tucked push-up: %^{Planche}"
+                    "Compression: %^{Compression}")))))
 #+end_src
+
 ** Latex
 - Compilation: on freebsd latexmk is not found, so we force it
 - Add a komascript class to export
