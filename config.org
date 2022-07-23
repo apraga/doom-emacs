@@ -30,7 +30,8 @@ Projects are defined with Notes and Task subcategories
 #+begin_src emacs-lisp
 (after! org
   (setq org-agenda-files (list "inbox.org" "projects.org") ; My agenda files
-        org-refile-targets (concat org-directory "projects.org")
+        ;; org-refile-targets (concat org-directory "projects.org")
+        org-refile-targets ("~/org/projects.org")
         org-agenda-start-day "today" ; Agenda view does not show notes with imcomplete parents in Doom !
         org-refile-allow-creating-parent-nodes 'confirm))
 #+end_src
@@ -64,7 +65,8 @@ Agenda is split into several sections
                        ((org-agenda-prefix-format "  %?-12t% s")
                         (org-agenda-overriding-header "\nInbox\n")))
             (tags "CLOSED>=\"<today>\""
-                  ((org-agenda-overriding-header "\nCompleted today\n"))))))))
+                  ((org-agenda-overriding-header "\nCompleted today\n")))
+                  )))))
 #+end_src
 Define capture for inbox tasks. As well as sports
 #+begin_src emacs-lisp
